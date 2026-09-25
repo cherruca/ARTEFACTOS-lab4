@@ -14,14 +14,13 @@ Adafruit_SH1106G display(
   OLED_RESET
 );
 
-const int TOUCH_PIN = 4; 
+const int TOUCH_PIN_1 = 4; 
+const int TOUCH_PIN_2 = 0; 
 
 const int UMBRAL_TOUCH = 300; 
 
 void setup() {
-
   Serial.begin(115200);
-
   Wire.begin(21, 22);
 
   if (!display.begin(OLED_ADDRESS, true)) {
@@ -34,8 +33,8 @@ void setup() {
 }
 
 void loop() {
-
-  int valorTouch = touchRead(TOUCH_PIN);
+  int valorTouch1 = touchRead(TOUCH_PIN_1);
+  int valorTouch2 = touchRead(TOUCH_PIN_2);
 
   display.clearDisplay();
 
@@ -43,23 +42,22 @@ void loop() {
   display.setCursor(26, 5);
   display.println("ESP32 TOUCH");
 
-  if (valorTouch < UMBRAL_TOUCH) {
-
+  if (valorTouch1 < UMBRAL_TOUCH) {
     display.setCursor(15, 28);
-    display.println("Toque detectado!");
-
-    display.fillCircle(105, 52, 5, SH110X_WHITE);
-  }
-
+    display.println("Boton 1 activado!");
+    display.fillCircle(105, 52, 5, SH110X_WHITE); 
+  } 
+  else if (valorTouch2 < UMBRAL_TOUCH) {
+    display.setCursor(15, 28);
+    display.println("Boton 2 activado!");
+    display.fillCircle(20, 52, 5, SH110X_WHITE); 
+  } 
   else {
-
     display.setCursor(32, 28);
     display.println("Esperando...");
-
-    display.fillCircle(20, 52, 5, SH110X_WHITE);
+    display.fillCircle(62, 52, 5, SH110X_WHITE);
   }
 
   display.display();
-
   delay(100);
 }
